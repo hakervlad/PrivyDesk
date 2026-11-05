@@ -1,0 +1,229 @@
+# PrivyDesk Entwicklungsworkflow V2
+
+## Rollen und Entscheidungsrechte
+
+Main Manager: Codex `gpt-6-astra`, Reasoning `high`. Er verantwortet Anforderungen,
+Architektur, Plan, TDD, DeepSeek-Aufträge, Review und Freigaben.
+Git Manager: Codex `gpt-6-luna`, Reasoning `low`. Er organisiert Issues, Branches,
+Worktrees, Commits, PRs und Projects ausschließlich auf Auftrag; kein Anwendungscode.
+Developer: DeepSeek Harness über `dsh --profile acp`, keine OpenCode-Zwischenschicht.
+Er implementiert nur abgegrenzte Aufgaben und konkrete Korrekturen im Issue-Worktree.
+Es gibt keine weitere Agentenrolle. QA bleibt beim Main Manager.
+
+Nur Main Manager autorisiert Implementierung, kennzeichnet Code als geprüft und gibt
+Push/Merge frei. Für finale Merges ist zusätzlich die Nutzerbestätigung erforderlich.
+Automatische Freigabe, Auto-Merge und Merge-Queue-Automatisierung sind nicht aktiviert.
+Eine spätere Option für risikoarme Änderungen benötigt eine ausdrückliche neue
+Nutzerfreigabe, definierte Risikokriterien und unverändert alle SHA-/CI-/Review-Gates.
+
+## Issue-Lifecycle und vorhandenes Project
+
+Prüfstand 2026-11-05: Repository `hakervlad/PrivyDesk`, öffentlich, Default `main`.
+Das private User-Project [Project 1](https://github.com/users/hakervlad/projects/1)
+heißt derzeit `@hakervlad's untitled project`, hat 0 Items und 19 Felder. Es ist
+noch nicht mit dem Repository verknüpft. Auswahl für PrivyDesk, Verknüpfung und
+Automationen müssen vor dem ersten Schreiben bestätigt/geprüft werden.
+
+| Workflow | Vorhandener Status | Übergangsvoraussetzung |
+| --- | --- | --- |
+| Backlog | Backlog | Aufgabe beschrieben |
+| Ready | Ready | Akzeptanzkriterien, Priorität und Abhängigkeiten geklärt, Main Manager gibt frei |
+| In Progress | In progress | Ein Issue-Branch und gebundener Worktree vorhanden, Auftrag aktiv |
+| In Review | In review | Implementierung zurückgegeben, Main Manager prüft |
+| Ready to Merge | fehlt | Lokale Tests/Review und tatsächliche finale CI erfolgreich; exakter Head freigegeben |
+| Done | Done | Merge und Issue-Abschluss bestätigt |
+| Blocked | fehlt | Konkreter Blocker, Verantwortlicher und nächster notwendiger Schritt bekannt |
+
+Bestehendes Statusfeld `PVTSSF_lAHOBPiNWs4AotimzggPN_g` weiterverwenden. Keine
+zweiten Felder anlegen. Erst nach Zustimmung zwei Optionen ergänzen. Bis dahin
+bleibt mergebereite Arbeit in In review; Freigabe im PR festhalten. Blockierte
+Arbeit behält ihren Status mit explizitem Blocker im Issue; kein Done/Schließen.
+Vor jeder Mutation IDs aktuell lesen, nicht dauerhaft auf kopierte IDs vertrauen.
+Priority ist vorhanden mit P0/P1/P2; keine neuen Prioritätsfelder/Labels erforderlich.
+Keine bestehende Blocked-Label-Konvention gefunden. Die lesende Workflow-Abfrage
+zeigt vier aktivierte Project-Automationen: Auto-add sub-issues to project, Auto-close
+issue, Item closed und Pull request merged. Ihre konkreten Trigger-/Statuskonfigurationen
+sind im gelesenen GraphQL-Typ nicht exponiert und müssen vor Änderungen in der
+Project-Oberfläche geprüft werden. Vorhandene passende Automationen bevorzugen;
+Done nie vor bestätigtem Merge setzen, insbesondere wegen Auto-close issue.
+
+Issue-Suche schließt offene und geschlossene ähnliche Aufgaben ein. Ein Issue
+enthält Titel, Beschreibung, prüfbare Akzeptanzkriterien, Priorität, bekannte
+Abhängigkeiten sowie Branch und PR sobald vorhanden. Vorlagen unter `.github/`
+unterstützen dies nach Commit/Push. Issues/PRs bleiben die dauerhafte Dokumentation;
+dieses Dokument ist eine Workflow-Anleitung, keine Aufgabenstatusdatei.
+
+## Branch, Worktree und tatsächliche T3-Bindung
+
+Ein Issue = ein Branch = ein Worktree. Feature `feat/<N>-<slug>`, Fehler
+`fix/<N>-<slug>`. Niemals Implementierung auf main. `dev` existiert zusätzlich,
+ist aber kein vereinbarter Integrationszweig; Basis/PR-Ziel bleibt main.
+Vor Anlage Issue-Verknüpfungen, Branches, PRs und `git worktree list --porcelain`
+prüfen; vorhandenen Worktree wiederverwenden und fremde/uncommittete Arbeit erhalten.
+
+`gh issue develop` 2.45.0 kennt `--name`, `--base`, `--checkout`, `--list`, aber
+keine Worktree-Option. Es erzeugt bereits einen Remote-Branch und braucht damit
+GitHub-Schreibfreigabe. Standard hier: zunächst lokaler Branch/Worktree; erster
+Push erst nach QA. Issue/Branch zunächst im Issue-Text verknüpfen, PR später mit
+dem Issue verbinden. gh issue develop ist nur eine ausdrücklich autorisierte
+Alternative, wenn der frühere Remote-Branch gewünscht ist.
+
+Für eine **explizit vom Nutzer gewünschte neue Top-Level-T3-Sitzung** kann T3 den
+Worktree selbst mit `t3_thread_launch` und
+`workspaceStrategy={type:"worktree",branch:<branch>,baseRef:<approved-base>,startFromOrigin:false}`
+anlegen. Vorher Duplikate prüfen. Bei einem bereits organisierten Worktree stattdessen
+`workspaceStrategy={type:"existing_worktree",worktreePath:<absolute-path>}` verwenden.
+Nicht einen zweiten Checkout anlegen. Kein Worktree-Setup in den Aufgabenprompt
+verlagern. Thread starten ist kein normaler Ersatz für `delegate_task`.
+
+Wenn der Nutzer keinen neuen Top-Level-Thread verlangt, ist für die Verlagerung
+des Main Managers in einen neuen Worktree `t3_worktree_handoff` möglich. Diesen
+Aufruf zuletzt ausführen; er beendet die laufende Sitzung und setzt sie über
+`continuationPrompt` fort. `runSetupScript:false` verhindert unbekannte Setup-Skripte.
+Ein bereits bestehender Worktree kann nicht durch einen einfachen Shell-`cd`
+als Thread-Worktree ausgegeben werden; dafür einen ausdrücklich gewünschten
+gebundenen Thread öffnen. Einschränkungen melden statt Bindung vortäuschen.
+
+Vor jeder Implementierung tatsächliches cwd, `git rev-parse --show-toplevel`,
+`git branch --show-current` und `git rev-parse HEAD` mit dem Auftrag vergleichen.
+Das gilt für Main Manager und Developer. T3-Resultate/Thread-Metadaten zusätzlich
+kontrollieren. Der Issue-Thread erhält ausdrücklich Astra/high als Modell.
+
+**Bootstrap:** Neue Worktrees übernehmen uncommittete Dateien nicht. Die Workflow-
+Konfiguration wird auf dem lokalen Branch `chore/multi-agent-workflow` gesichert;
+vor jedem Issue-Worktree muss dessen tatsächlicher Basis-Commit diese Regeln enthalten.
+Bis zur freigegebenen Integration in main darf nicht stillschweigend origin/main ohne
+Konfiguration als Basis dienen. Kein stiller Push, kein Commit direkt auf main.
+Bootstrap-Push und spätere Integration brauchen die vorgesehenen Freigaben.
+
+## Delegation und knappe Kommunikation
+
+T3 meldet `acpRegistry_deepseek` mit `driverKind=acpRegistry`,
+`canRunChildTask=true`, `canRunCrossProviderChildTask=true`. Die lokale
+Provider-Konfiguration zeigt `commandPath=dsh`, `commandArgs=["--profile","acp"]`.
+DSH und ACP-Profil sind installiert. Das ist eine lokale Registrierungsprüfung;
+API-Schlüsselgültigkeit, Netzwerkerreichbarkeit des Modellendpunkts und Guthaben
+wurden nicht per Aufruf getestet.
+
+Bei späteren Implementierungsaufträgen `delegate_task` im bereits gebundenen
+Issue-Worktree verwenden, `isolation:"shared"`, `role:"implementation"`,
+`target.providerInstanceId:"acpRegistry_deepseek"`. Ein zulässiger kostenorientierter
+Startwert aus dem gelesenen Katalog ist Modell-ID
+`["deepseek-official","deepseek-flash"]` (als JSON-String),
+`target.options.reasoning_effort:"low"`; Modell und API-Abrechnung zuvor bestätigen.
+Kein automatischer Wechsel zu Pro, Account-Provider oder OpenCode bei Fehlern.
+Modellkatalog vor realer Nutzung bei Bedarf aktualisieren. Ein DeepSeek-Task gleichzeitig;
+`shared` verhindert einen zweiten Worktree und enthält die zuvor geschriebenen Tests.
+Kein Modellstart während der Einrichtung.
+
+Git-Manager-T3-Delegation erhält ausdrücklich Provider codex, Modell gpt-6-luna,
+`target.options.reasoningEffort:"low"`. Native Custom-Agent-Dateien werden von T3
+nicht automatisch als eigene Rollenbegrenzung garantiert; Anweisungen mitgeben und
+tatsächliche Laufzeit prüfen. Neue Kindaufgaben erhalten nur ihren expliziten Prompt.
+
+Übergabeschema für alle Rollen:
+
+```text
+Issue: #N
+Aufgabe: ...
+Worktree: absoluter Pfad
+Relevante Dateien: ...
+Akzeptanzkriterien: ...
+Testergebnisse: Befehl, Ergebnis oder noch nicht ausgeführt
+Gewünschtes Ergebnis: ...; gegebenenfalls autorisierte Aktion + Head/Base-SHA
+```
+
+Rückgabe: Ergebnis, geänderte Dateien/GitHub-Ressourcen, Fehler, offene Aufgaben.
+Keine langen Agentengespräche; nur Main Manager entscheidet die nächsten Schritte.
+Maximal zwei automatische Korrekturrunden. Bei Fehlern `systematic-debugging` laden,
+konkrete relevante Auszüge weitergeben und danach erneut verifizieren. Tests nicht
+entfernen, um Fehler zu verdecken. Nach zwei Runden stoppen und Blocker festhalten.
+
+## Rechte und kontrollierte Git-Ausführung
+
+Vier getrennte Ebenen beachten:
+
+| Ebene | Tatsächlicher Stand / Grenze |
+| --- | --- |
+| Lokale Git-Rechte | Hauptsitzung full-access; OS kann Projekt/.git schreiben. Das ist keine Freigabe. |
+| GitHub-API | gh-Account hakervlad hat ADMIN; Token enthält repo, project, read:org. Rechte sind breit, kein Schreibtest durchgeführt. |
+| Main-Manager-Freigabe | Auftrag mit Issue, Pfaden, Aktion und geprüftem Stand; keine technische Sandbox. |
+| Nutzerbestätigung | Erste GitHub-Schreibaktion und jeder finale Merge bis ausdrücklicher Policy-Änderung; Repository-Einstellungen separat bestätigen. |
+
+Die vorhandene Agentendatei behält `sandbox_mode="read-only"`. Nach der
+[offiziellen Custom-Agent-Dokumentation](https://learn.chatgpt.com/docs/agent-configuration/subagents)
+überschreibt dieses Feld bei Custom Agents die Eltern-Sandbox nicht. Daher wird
+kein technisch erzwungener Schreibschutz behauptet. T3 `approval-required` ist ein
+Freigabemodus und ebenfalls keine Garantie für eine reine Lesesandbox; die konkrete
+Host-Konfiguration muss vor Ausführung nachgewiesen werden. Eine Dateisandbox
+verhindert für sich genommen außerdem keine GitHub-Schreibaktion über das Netz.
+
+Bis ein enger Ausführungspfad besteht, bereitet der Git Manager exakte Befehle und
+Dateilisten vor; Main Manager führt nach den erforderlichen Freigaben die konkrete
+Operation aus. Das ist ein kontrollierter Prozess, keine technisch isolierte neue
+Agentenrolle. Ein **separater deterministischer Git-Executor** ist nur vorgeschlagen:
+Allowlist für Repository, Worktree, Feature-Branch, Operation, Dateien und exakten SHA;
+keine freie Shell, keine Git-Konfig-/Hook-Manipulation, keine Force-/Admin-Flags;
+Lesetoken beim Planner und eingeschränkte Schreib-Credentials nur beim Executor.
+Für Merge zusätzlich Einmalfreigabe mit PR/Head/Base sowie Revalidierung und
+Branch Protection. Er ist nicht installiert und bietet hier noch keinen Schutz.
+
+## Review, Push, PR und Merge
+
+Main Manager überprüft Funktion, existierende/neue Tests, unnötigen Code und
+Abhängigkeiten, Architektur, unerwünschte Dateien, Sicherheit und Datenschutz.
+PrivyDesk: keine unautorisierten Dateizugriffe, unbestätigten destruktiven Aktionen,
+unbeabsichtigten sensiblen Uploads oder unsichere Schlüsselablage.
+
+Nach Review und lokalen Tests wird der konkrete Diff zur expliziten Dateiauswahl
+freigegeben. Nach dem Commit prüfen, dass Commit/Tree ausschließlich diesen Diff
+enthalten, SHA festhalten, erst dann Push. Git Manager erstellt PR nur wenn noch
+keiner besteht und verknüpft das Issue. Neue/übernommene/gepushte PRs sofort mit
+T3 `link_pull_request` verknüpfen; fehlgeschlagene Verknüpfung melden.
+
+Vor Merge: Issue vorhanden/verknüpft, lokale Tests bestanden, Code vom Main Manager
+reviewt, tatsächliche finale CI erfolgreich, keine offenen Review-Blocker, kein
+Konflikt und kein ungeprüfter Commit. Unbekannte/pending/skipped Checks nicht als
+Erfolg behandeln. PR-Head und Base unmittelbar erneut lesen. Freigabe benennt beide
+vollständigen SHAs. Base-Wechsel ebenfalls prüfen; bei relevanten Änderungen neu testen.
+`gh pr merge --match-head-commit <approved-sha>` verhindert einen anderen Head;
+es ersetzt keine serverseitigen Regeln für Änderungen an der Base. Bis Rulesets/CI
+konfiguriert sind, bleibt der Merge gesperrt. Kein --admin, Force-Push oder --no-verify.
+
+Wenn eine autorisierte PR-Aufgabe auf Checks/Reviews wartet, Main Manager nutzt
+T3 `watch_pull_request` und beendet den Turn; Kinder beobachten nicht selbst.
+Keine Poll-Schleifen oder gh --watch. Vor der abschließenden Rückgabe eines zuvor
+beobachteten PRs ggf. `unwatch_pull_request` verwenden.
+
+Nach bestätigtem Merge GitHub-Issue-Schließautomation überprüfen oder das Issue
+autorisiert schließen; Project Done durch Automation oder gezielte Feldänderung.
+Erst sauberen, nicht aktiven Worktree ohne unveröffentlichte Arbeit entfernen.
+Kein erzwungenes Löschen, kein automatisches Entfernen fremder/unfertiger Branches.
+
+## CI und Remote-Schutz: vorbereitet, nicht aktiviert
+
+Es existieren keine Stack-Manifeste, Tests, Lint- oder Typecheck-Kommandos und keine
+GitHub Actions. `.github/workflow-templates/privydesk-ci.yml.template` ist bewusst
+inaktiv. Vor Aktivierung Stack/Runtime und Lockfile bestimmen, echte lokale Befehle
+nachweisen, nötige Actions auf geprüfte SHAs pinnen und Jobs implementieren. Die
+Vorlage selbst führt keine Anwendungstests aus und würde bei bloßem Umbenennen
+mit einem expliziten Voraussetzungenfehler abbrechen.
+
+Für main: bestehende Branch Protection antwortet „Branch not protected“; Rulesets
+sind leer, GitHub Auto-Merge ist aus. Adminrechte erlauben voraussichtlich Einrichtung,
+aber tatsächliche Schreibrechte wurden nicht getestet. Nach gesonderter Zustimmung
+PR-Pflicht, erforderliche CI-Checks, keine Force-Pushes/Löschungen und keine Bypässe
+konfigurieren. Checknamen erst nach realem CI-Lauf festlegen. Bei Einzelentwicklerbetrieb
+kann ein externer verpflichtender Reviewer zusätzliche Mitarbeit erfordern; Main-Manager-
+Selbstreview ist keine unabhängige GitHub-Review-Freigabe. Nicht einfach unerfüllbare
+Review-Regeln oder einen Admin-Bypass einrichten.
+
+## Guthaben und Daten
+
+Kein DeepSeek-Modellaufruf bei der Einrichtung; nur Paket-, Profil- und Provider-Metadaten.
+Guthaben vor/nach echten Aufträgen im offiziellen Provider-Dashboard prüfen. Keine
+feste technische Kostengrenze aus Promptregeln ableiten. Kontostandabfrage oder
+Modellaufruf wird hier nicht ausgeführt. Kein Pro-Fallback, keine unbeschränkten Retries.
+Keine API-Schlüssel im Projekt oder in Ausgaben, keine echten Nutzerdokumente für Tests,
+keine globalen Änderungen oder Framework-Installationen. Externe KI bekommt nur die
+für den Auftrag freigegebenen Dateien. Promptanweisungen ersetzen keine OS-/Netzwerkrechte.

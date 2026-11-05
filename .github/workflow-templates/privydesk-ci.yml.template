@@ -1,0 +1,18 @@
+# INACTIVE TEMPLATE: not under .github/workflows and not a .yml workflow file.
+# Choose the actual technology stack, lockfile and test/lint/typecheck commands.
+# Replace the failing prerequisite job with those real checks, then review and
+# install as .github/workflows/ci.yml. Never treat this template as passing CI.
+name: PrivyDesk CI
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  prerequisites:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require real project checks
+        run: |
+          echo 'CI prerequisites missing: choose stack and real verification commands.'
+          exit 1
