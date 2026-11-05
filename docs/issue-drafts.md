@@ -19,32 +19,56 @@ Head während der Prüfung 37c8885ed0aa945b79d94ab147670007fe3298e8. Keine Schre
 
 ## Entwurf 1: Technische Projektgrundstruktur
 
-**Titel:** Technische Projektgrundstruktur nach Stackentscheidung einrichten
+**Titel:** PrivyDesk – Desktop-App-Grundstruktur erstellen
 
 **Beschreibung**
 
-Die technische Projektgrundlage soll nach ausdrücklicher Stackentscheidung eingerichtet werden. Empfohlen ist Tauri 2 mit React/TypeScript und kleinem Rust-Kern; der Vergleich mit Electron steht in docs/start-readiness.md im Ops-Checkout. Die Stackentscheidung bleibt offen; dieser Entwurf legt keine Architektur fest. Die Stackzustimmung ist Voraussetzung für den Start.
+Den bestätigten Stack Tauri 2 + React + TypeScript + Rust als minimale Desktop-App
+einrichten. React/TypeScript für die Oberfläche, kleiner Rust-Kern über Tauri;
+keine Serveranwendung, Datenbank, Dateiindizierung oder KI-Integration.
 
-**Priorität:** P1
+**Priorität:** P1 (vorhandenes Project-Feld).
 
-**Abhängigkeiten:** Ausdrückliche Stackentscheidung; keine Abhängigkeit von Issue 2 oder 3.
+**Abhängigkeiten:** Stack freigegeben. Vor Veröffentlichung die vier Project-
+Automationsbedingungen prüfen. Vor Implementierung vorhandenes Rust/Cargo über ~/.cargo/bin verfügbar machen und
+fehlende Linux-Buildpakete nach Installationsfreigabe bereitstellen, echte Issue-Nummer erhalten,
+Zuständigkeit abstimmen, Assignee/Status setzen und zurücklesen. Kein Start bei
+unklarer Übernahme; auch Zuständigkeiten des Freundes und seiner Agenten respektieren.
 
 **Akzeptanzkriterien**
 
-- [ ] Der bestätigte Stack und die zugehörigen Laufzeit- und Buildvoraussetzungen sind dokumentiert.
-- [ ] Der vollständige getrackte App-Baum enthält keine KI-Agenten-Konfiguration oder reine Orchestrierungsdokumentation.
-- [ ] Das Projekt lässt sich mit den im Repository dokumentierten Befehlen lokal starten und bauen.
-- [ ] Die minimale Anwendungsoberfläche startet ohne Laufzeitfehler.
-- [ ] Reale Test-, Lint-, Typecheck- und Build-Einstiege sind vorhanden und dokumentiert; jeder Befehl wurde lokal ausgeführt.
-- [ ] Die vorhandene CI-Vorlage wird erst mit diesen realen Befehlen aktiviert; ein Pull-Request-Lauf nach dev führt sie aus und schlägt bei einem fehlschlagenden Check fehl.
+- [ ] Tauri 2 mit Rust-Backend ist eingerichtet.
+- [ ] React und TypeScript sind eingerichtet.
+- [ ] Eine minimalistische Desktop-Oberfläche startet ohne Laufzeitfehler.
+- [ ] Lokaler Entwicklungsstart und Build funktionieren mit dokumentierten, tatsächlich ausgeführten Befehlen.
+- [ ] Grundlegende sinnvolle Tests sind vorhanden; die Suite prüft sichtbares UI-Verhalten statt nur Dateiexistenz und läuft erfolgreich.
+- [ ] Keine unnötigen Abhängigkeiten, Abstraktionen oder Zusatzfunktionen.
+- [ ] Der vollständige App-Tree enthält keine `.agents/`, `.dsh/`, `.codex/`, `AGENTS.md` oder reine KI-Orchestrierungsdokumentation; auch dev bleibt davon frei.
+- [ ] Reale Test-, Typecheck-/Lint- und Build-Einstiege werden passend zum tatsächlichen Projekt dokumentiert und lokal geprüft; keine erfundenen Befehle oder leeren grünen Suites.
+- [ ] Minimale CI führt die vorhandenen relevanten Prüfungen bei PRs nach dev aus und ist am finalen PR-Head erfolgreich.
 
-**Tests:** Nur synthetische oder temporäre Testdaten. Nach Stackfreigabe eine minimale echte Testinfrastruktur mit einem sinnvollen Start-/Grenzverhaltenstest einrichten; keine leere Suite als Erfolg werten. Der Main Manager schreibt passende fehlschlagende Tests vor Implementierung und verifiziert die finalen Befehle.
+**Testanforderungen:** Main schreibt nach Bereitstellung der minimal erforderlichen
+Testinfrastruktur einen beobachtbar fehlschlagenden Test für das vereinbarte UI-
+Startverhalten vor dessen Implementierung. Developer implementiert nur den Auftrag.
+Lokalen Desktop-Start zusätzlich manuell prüfen; Unit-Tests ersetzen diesen Nachweis
+nicht. Build und relevante Prüfungen lokal ausführen; Testfehler blockieren Freigabe.
+Kein Produktionscode nur zur Erfüllung eines selbstreferenziellen Strukturtests.
 
-**Sicherheit:** Keine echten Nutzerdokumente, Schlüssel oder Zugangsdaten in Tests oder Projektdateien aufnehmen. Keine Dateiindizierung oder KI-Uploads ergänzen.
+**Sicherheitsanforderungen:** Nur synthetische/temporäre Testdaten. Keine Nutzerdokumente,
+Schlüssel oder Zugangsdaten. Keine Dateisystem-, Shell- oder Netzwerk-Plugins ohne
+Bedarf; keine Dateisuche/Dateioperationen oder KI-Uploads in diesem Issue ergänzen.
+Tauri-Capabilities auf den vereinbarten UI-Umfang beschränken und prüfen.
 
-**Branch:** `feat/<issue-number>-project-foundation`
+**Zuständigkeit:** Noch keine Übernahme vereinbart. Erst nach Veröffentlichung die
+live Assignees und Status prüfen; bei Konkurrenz nicht übernehmen.
 
-**PR:** `<PR-Link, später ergänzen>`
+**Branch:** `feat/<ECHTE-ISSUE-NUMMER>-desktop-foundation`, von geprüftem `dev`.
+
+**Worktree:** `/home/vladimir/.t3/worktrees/PrivyDesk/feat/<ECHTE-ISSUE-NUMMER>-desktop-foundation`
+(nur lokaler Planungspfad, nicht mit privaten Pfaden veröffentlichen).
+
+**PR:** nach `dev`, später echte URL ergänzen. `Refs #N` plus PR-Link im Issue;
+kein automatisches Schließen durch Keywords bei Nicht-Default dev voraussetzen.
 
 ## Entwurf 2: Lokale Dateisuche
 

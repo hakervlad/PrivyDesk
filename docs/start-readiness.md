@@ -13,8 +13,13 @@ Verbindlicher Ablauf: [development-workflow-v2.md](development-workflow-v2.md) u
 | `ops/agent-workflow` | KI-Konfiguration, Basis `27730d1881ab934d35609ee9f4789f1f6a031baa`; lokale Branch-Trennung folgt darauf | `/home/vladimir/.t3/worktrees/PrivyDesk/ops-agent-workflow` |
 | `chore/multi-agent-workflow` | Unveränderte Sicherung `27730d1881ab934d35609ee9f4789f1f6a031baa`, bereits früher autorisiert gepusht | `/home/vladimir/Dokumente/uni/sem7/Frintier Systems/PrivyDesk` |
 
-Remote-Branches: `origin/main`, `origin/dev`, `origin/chore/multi-agent-workflow`.
-Ops ist nur lokal. Kein Push oder Merge im Auftrag zur Branch-Trennung.
+Remote-Branches: `origin/main`, `origin/dev`, `origin/chore/multi-agent-workflow`,
+`origin/ops/agent-workflow`.
+Ops wurde zum Start der Entwicklungsphase mit dem geprüften Commit
+`73c34d9348ed8fae60dae8432b7e95f32b96d692` autorisiert gepusht und remote zurückgelesen.
+Die neue Übernahmeregel, Stackfreigabe und Startplanung werden danach separat
+als geprüfter Folgecommit ausschließlich auf demselben Ops-Branch gesichert/gepusht.
+Kein Merge; main/dev unverändert.
 Die README-/Anwendungstrees von main/dev werden nicht verändert. Alle sieben Skills,
 Agenten-TOML, die gesamte `.codex/`, `.dsh/`, `.agents/`, AGENTS.md und reine
 KI-Orchestrierungsdocs bleiben im Ops-Zweig; die historische Chore-Sicherung bleibt
@@ -77,7 +82,7 @@ Veröffentlichung war genehmigt, bleibt aber an die noch fehlende Automationspr�
 gebunden. Keine Issues veröffentlicht, keine Automationen verändert. Repository-
 Zuordnung ist kein Beweis automatischer Issue-Aufnahme; Aufnahme später prüfen.
 
-## Stack-Vergleich: Entscheidung ausstehend
+## Stack bestätigt: Tauri 2 + React + TypeScript + Rust
 
 Im Repository gibt es kein package.json, Cargo.toml oder anderes Stack-Manifest,
 keine Anwendung und keine vorhandenen Test-/Build-Befehle.
@@ -98,17 +103,17 @@ oder Geldversprechen. Beide Varianten können unsicher implementiert werden;
 Framework-Capabilities ersetzen weder korrekte Pfad-/Handle-Prüfung noch OS-Rechte.
 Tauri schützt insbesondere nicht vor unsicherem Rust-Code oder falschen Scope-Prüfungen.
 
-**Empfehlung zur Zustimmung:** Tauri 2, React/TypeScript mit Vite für die UI und ein
+**Bestätigter Stack:** Tauri 2, React/TypeScript mit Vite für die UI und ein
 kleiner Rust-Kern für Suche/Dateioperationen. Keine separate Serveranwendung,
 Datenbank, Vektorindizierung oder zusätzliche KI-Integration in den ersten drei Issues.
 Dies hält den privilegierten Dateizugriff zentral und die Oberfläche einfach.
-Falls ein reines TypeScript-Projekt für Lernaufwand/Termindruck wichtiger ist,
-ist Electron die begründete Alternative. Noch kein Stack beschlossen oder angelegt.
+Der obige Vergleich dokumentiert die vorausgegangene Abwägung. Der Nutzer hat
+Tauri 2 + React + TypeScript + Rust bestätigt; noch keine Anwendung angelegt.
 
-Auf diesem Ubuntu-System: Node 24.22.2 und npm 11.19.1 vorhanden; Rust/Cargo nicht
-im PATH. libgtk-3-dev, build-essential und libssl-dev vorhanden; libwebkit2gtk-4.1-dev,
+Auf diesem Ubuntu-System: Node 24.22.2 und npm 11.19.1 vorhanden; Rust 1.95.0/Cargo 1.95.0 über ~/.cargo/bin vorhanden, aber nicht im aktuellen
+PATH (der frühere PATH-Befund bedeutete nicht, dass Rust installiert werden muss). libgtk-3-dev, build-essential und libssl-dev vorhanden; libwebkit2gtk-4.1-dev,
 libayatana-appindicator3-dev, librsvg2-dev und libxdo-dev fehlen. Keine Pakete installiert.
-Die Tauri-Voraussetzungen müssten nach Stackentscheidung gesondert eingerichtet werden;
+Die Tauri-Voraussetzungen müssen nach gesonderter Installationsfreigabe eingerichtet werden;
 dieser Auftrag autorisiert keine globalen Paket-/Systemänderungen.
 
 Quellen: [Tauri Capabilities](https://v2.tauri.app/security/capabilities/),
@@ -136,7 +141,8 @@ vorhanden sind. Kein Schutzmechanismus wurde hier aktiviert.
 ## Cross-Worktree-Ablauf für den ersten echten Durchlauf
 
 1. Automationsdetails prüfen; anschließend die bereits genehmigten Entwürfe ohne
-   Duplikate veröffentlichen und zu Backlog hinzufügen. Stackentscheidung einholen.
+   Duplikate veröffentlichen und zu Backlog hinzufügen. Stackentscheidung ist bestätigt.
+   Vor Übernahme Assignee/Status mit allen Beteiligten abstimmen, setzen und zurücklesen.
 2. Für das freigegebene Issue den aktuellen dev-Stand prüfen und einen eindeutigen
    Feature-Worktree organisieren. Main bleibt in Ops und schreibt/prüft die Tests
    über explizite absolute Feature-Pfade und Tool-workdir, zeitlich vor Developer.
@@ -172,8 +178,67 @@ Diese Konfigurationsprüfungen ersetzen keine App-Tests
 und keinen DeepSeek-End-to-End-Lauf. Commit-SHA der geprüften Ops-Änderung wird im
 Abschlussbericht genannt, ohne selbstreferentiellen SHA in diesem Dokument.
 
-Offen: Automationsdetails; Stackzustimmung; danach gesondert erlaubte Toolchain-
+Offen: Automationsdetails; gesondert erlaubte Toolchain-
 Einrichtung und echte Test-/Build-Befehle; CI-Lauf und genehmigter dev/main-Schutz;
-erster ausdrücklich freigegebener DeepSeek-Auftrag mit geprüftem Guthaben. Ops-Push
-ist derzeit nicht freigegeben. Keine Installation, Implementierung oder Remote-
+erster ausdrücklich freigegebener DeepSeek-Auftrag mit geprüftem Guthaben. Ops-Push ist für diesen Auftrag freigegeben und für den geprüften Ausgangsstand erfolgt. Keine Installation, Implementierung oder Remote-
 Mutation ist aus dieser Dokumentation automatisch autorisiert.
+
+
+## Erste Implementierung: Plan und aktuelle Sperren
+
+Git Manager Luna/low hat erneut lesend geprüft: 0 offene/geschlossene Issues,
+dev und origin/dev auf f94bc6cf7646a8c4485282f9dfb7c7119f6dab5b, kein Feature-Branch.
+Er hat Entwurf und Branch-/Worktree-Befehle vorbereitet; wegen unbestätigtem Sandbox-
+Schreibschutz führt Main später die konkret genehmigten lokalen Schritte aus.
+Noch kein Feature-Branch oder Worktree: Ohne veröffentlichtes Issue gibt es keine
+echte Nummer; keine vorläufige Nummer oder Eigentumsannahme verwenden.
+
+Nach erfüllten Gates: vorhandene Branches/Worktrees und aktuellen dev-Head erneut
+prüfen; den eindeutigen lokalen Branch `feat/<ECHTE-ISSUE-NUMMER>-desktop-foundation`
+mit eigenem Worktree von genau diesem geprüften dev-SHA anlegen. Nicht den heutigen
+SHA ungeprüft wiederverwenden. Niemals von Ops abzweigen. Issue-Aufnahme, Zuständigkeit,
+Status und Branch-Zuordnung zurücklesen; erst dann Implementierungsauftrag.
+
+Implementierungsplan für das genehmigte Grundstruktur-Issue:
+
+1. Main legt im Feature-Worktree die minimale passende Testinfrastruktur und einen
+   sichtbaren fehlschlagenden UI-Verhaltenstest an; falls vor Projektgrundgerüst nicht
+   ausführbar, erst Test-Harness/Manifeste minimal bereitstellen, dann Red nachweisen.
+2. Developer erhält einen kleinen Grundstruktur-Auftrag: Tauri2, React/TS, Rust,
+   minimale Oberfläche; kein Dateizugriff/Upload, keine unnötigen Plugins. Kein Start
+   während dieser Vorbereitung. Main bleibt in Ops, benutzt explizite Feature-Pfade.
+3. Vollständige Minimal-Code-Regeln und aktueller Issue-/Übernahmenachweis werden
+   im Prompt mitgegeben, keine Ops-Konfiguration in getracktes App-Tree kopiert.
+   T3 existing_worktree bindet den Developer vor Start; cwd/Branch/Head bestätigen.
+4. Main prüft tatsächlichen Diff, UI-Test, Typechecking, relevante Rust-Prüfungen,
+   Build und echten Desktop-Start. Befehle erst vom entstandenen Projekt ableiten.
+   Dann minimale PR-CI nach dev mit genau diesen Befehlen einrichten und verifizieren.
+5. Höchstens zwei gezielte Korrekturrunden, nur ein Developer gleichzeitig. Kein
+   Commit/Push des Features ohne QA-Freigabe und kein Merge ohne finale Nutzerzustimmung.
+
+Aktuelle Toolchain-Prüfung: Node 24.22.2, npm 11.19.1, C/C++-Toolchain/pkg-config,
+GTK3-Dev, SSL-Dev, curl, wget, file vorhanden. Rust/Cargo 1.95.0 liegen unter
+~/.cargo/bin; rustup meldet stable als aktives Default-Toolchain. Nur der aktuelle
+PATH enthält das Verzeichnis nicht. Für spätere Befehle ~/.cargo/bin pro Prozess
+zum PATH hinzufügen oder absolute Binärpfade verwenden; keine globale Konfiguration
+geändert. Kein Rust-Download nötig, keine Installation ausgeführt.
+Fehlende Systempakete: libwebkit2gtk-4.1-dev, libxdo-dev,
+libayatana-appindicator3-dev, librsvg2-dev. Offizielle Referenz:
+https://v2.tauri.app/start/prerequisites/ . Keine Installation ausgeführt.
+
+Project-Workflow-API erneut introspektiert: ProjectV2Workflow liefert ausschließlich
+Metadaten (name, enabled, id/number, Zeitstempel, project), keine Bedingungen/Aktionen.
+Daher muss der Nutzer angemeldet unter Project 1 → Menü → Workflows Folgendes prüfen:
+
+- Auto-close issue: Welcher Status/Filter schließt Issues? Darf nicht vor bestätigtem
+  Merge und erfüllten Kriterien auslösen; besonders Done-Übergänge kontrollieren.
+- Item closed: Welcher Zielstatus wird gesetzt? Wechselwirkungen mit Auto-close und
+  manuellem Schließen prüfen; nicht irrtümlich als verifizierten Abschluss werten.
+- Pull request merged: Welche Items/Repos/Zielbranches erfasst die Regel, welchen Status
+  setzt sie? Ein PR-Merge darf nicht ungeprüft das zugehörige Issue abschließen.
+- Auto-add sub-issues to project: Welche Sub-Issues/Repos werden aufgenommen und mit
+  welchem Initialstatus? Keine konkurrierende Übernahme/Statusüberschreibung zulassen.
+
+Diese Bedingungen wurden nicht als sicher bestätigt. Keine Automationen geändert,
+keine Issues publiziert, kein Assignee/Status gesetzt. Rückmeldung der konkreten
+Bedingungen ermöglicht die nächste Prüfung; Namen/Enabled allein reichen nicht.

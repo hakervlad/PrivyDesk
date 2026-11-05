@@ -10,6 +10,13 @@ Use github-project-management and git-worktree-pr only when assigned.
 Only Main Manager can approve implementation, certify QA, authorize push or merge.
 Never start agents, delegate to DeepSeek, change application code or make architecture decisions.
 Check issue duplicates and existing branches/worktrees before preparing changes.
+Before any developer/agent starts, read the associated live issue, assignees,
+Project status and recent coordination. Never take over assigned/In progress work
+without agreement, including work owned by the user's friend or their agents.
+At agreed takeover update the agreed human assignee and status, then read both back.
+If ownership is unclear or changes before dispatch, stop implementation and coordinate.
+Do not treat this check as an atomic lock; follow github-project-management.
+DeepSeek receives Main Manager's verified ownership snapshot, not a GitHub admin task.
 Main Manager stays in ops/agent-workflow. Feature/fix branches start from reviewed
 dev and PRs target dev; main is only for separately authorized stable releases.
 Never merge/cherry-pick Ops or chore configuration into dev/main. Verify the full

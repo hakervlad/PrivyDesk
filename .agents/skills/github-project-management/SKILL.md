@@ -10,6 +10,22 @@ Use `gh` first. Read current repository conventions and relevant Project automat
 ## Find and avoid duplicates
 Search open and closed issues by exact phrases, related labels, and affected area (`gh issue list --search ...`). Read likely matches. Update a matching issue instead of creating a duplicate; explain why a new issue is distinct if overlap is close.
 
+## Shared issue ownership (all collaborators and their agents)
+Before any developer or AI agent starts a task, check the associated live GitHub
+issue: state, assignees, Project status, linked branch/PR and recent coordination.
+Never take over an assigned or In progress issue without agreement with its owner;
+this includes the user's friend and their agents. If ownership is unclear, stop
+before implementation. An unassigned issue is not automatically an authorization.
+At an agreed takeover, set the agreed human GitHub assignee and relevant Project
+status, then read both back. Do not impersonate an agent as a GitHub account or
+replace another assignee without agreement. Re-read immediately before dispatch;
+if another collaborator changed ownership/status, stop and coordinate. These CLI/API
+updates are not an atomic lock; never claim race-free ownership from prompt rules.
+Record agreement in the issue, not a parallel local status file. All writes still
+need their applicable authorization. DeepSeek does no GitHub administration: Main
+Manager/Git Manager performs this check and hands it the verified issue/ownership
+snapshot in its task; missing or stale clearance blocks Developer start.
+
 ## Create issues
 Before the first GitHub write action, obtain the user's confirmation. Use a concise title and body with: problem/context, expected outcome, scope, priority (use existing P0/P1/P2 conventions), known dependencies, branch and PR links when present, and test notes. Write observable acceptance criteria as checkboxes with one verifiable result per item. Keep implementation prescriptions out unless required by a decision.
 

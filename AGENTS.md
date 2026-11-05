@@ -18,6 +18,17 @@
 - **Developer (DeepSeek Harness):** Nur die ausdrücklich zugewiesene Implementierungsaufgabe ausführen. `minimal-code` und relevante Skills beachten; keine Issue-Verwaltung, Architektur-Großplanung, Recherche, Feature-Erweiterung oder Agentenstarts. Nur nötige Dateien lesen und ändern.
 - **Git Manager (Codex-Subagent, wenn T3 verfügbar):** Verwaltet Issues, Branches, Worktrees, Commits, Pull Requests, Labels und Project-Status. Kein Anwendungscode, keine Architektur, keine eigenen Implementierungsaufträge. Nur der Main Manager darf ihn zu Push/Merge autorisieren. Vor der ersten GitHub-Schreibaktion Nutzerbestätigung einholen; keine Wiederholungsfrage für bereits konkret autorisierte Aktionen. Nicht nach jedem Edit starten.
 
+## Gemeinsame Issue-Übernahme
+Vor Beginn jeder Aufgabe durch Entwickler oder KI-Agenten das zugehörige Live-Issue
+prüfen: Assignees, Status, Absprachen und vorhandener Branch/PR. Bereits zugewiesene
+oder in Bearbeitung befindliche Issues nur nach Abstimmung übernehmen; dies gilt
+auch für den Freund des Nutzers und dessen Agenten. Bei vereinbarter Übernahme den
+abgestimmten menschlichen GitHub-Assignee und Status aktualisieren und zurücklesen.
+Bei unklarer Zuständigkeit keine Implementierung. Unmittelbar vor Developer-Start
+erneut prüfen; CLI-Updates sind keine atomare Sperre. Main/Git Manager erledigt die
+GitHub-Prüfung und übergibt DeepSeek den geprüften Issue-/Zuständigkeitsstand;
+DeepSeek übernimmt keine GitHub-Verwaltung. Ohne aktuelle Freigabe nicht starten.
+
 ## Ablauf V2
 1. Nutzer gibt eine Aufgabe frei. Nur der Main Manager analysiert Anforderungen, entscheidet Architektur und autorisiert Implementierung.
 2. Git Manager sucht bestehende Issues inklusive geschlossener Duplikate. Falls nötig bereitet er ein Issue mit Beschreibung, Akzeptanzkriterien, Priorität, Abhängigkeiten und später Branch/PR vor; Erstellung erst nach Nutzerfreigabe.

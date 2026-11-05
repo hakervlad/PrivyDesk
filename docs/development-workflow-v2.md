@@ -9,6 +9,8 @@ Worktrees, Commits, PRs und Projects ausschließlich auf Auftrag; kein Anwendung
 Developer: DeepSeek Harness über `dsh --profile acp`, keine OpenCode-Zwischenschicht.
 Er implementiert nur abgegrenzte Aufgaben und konkrete Korrekturen im Issue-Worktree.
 Es gibt keine weitere Agentenrolle. QA bleibt beim Main Manager.
+Der Nutzer hat Tauri 2 + React + TypeScript + Rust ausdrücklich bestätigt;
+Toolchain-Installationen und Implementierung sind noch nicht gestartet.
 
 Nur Main Manager autorisiert Implementierung, kennzeichnet Code als geprüft und gibt
 Push/Merge frei. Für finale Merges ist zusätzlich die Nutzerbestätigung erforderlich.
@@ -45,6 +47,13 @@ issue, Item closed und Pull request merged. Ihre konkreten Trigger-/Statuskonfig
 sind im gelesenen GraphQL-Typ nicht exponiert und müssen vor Änderungen in der
 Project-Oberfläche geprüft werden. Vorhandene passende Automationen bevorzugen;
 Done nie vor bestätigtem Merge setzen, insbesondere wegen Auto-close issue.
+
+Vor Implementierungsbeginn gilt die gemeinsame Issue-Übernahmeregel aus AGENTS.md
+und github-project-management: Live-Issue/Assignees/Status lesen, bestehende Zuständigkeit
+nur nach Abstimmung ändern, vereinbarte Übernahme mit Assignee/Status zurücklesen.
+Unklare Zuständigkeit oder zwischenzeitliche Übernahme durch den Freund/seine Agenten
+blockiert den Start. Main/Git Manager prüft unmittelbar vor Dispatch; DeepSeek erhält
+den bestätigten Issue-Link und Zuständigkeitsstand, keine GitHub-Verwaltungsaufgabe.
 
 Issue-Suche schließt offene und geschlossene ähnliche Aufgaben ein. Ein Issue
 enthält Titel, Beschreibung, prüfbare Akzeptanzkriterien, Priorität, bekannte
@@ -147,6 +156,10 @@ Muster. Keine unnötigen Abstraktionen, Abhängigkeiten, Zusatzfunktionen oder �
 außerhalb des Auftrags. Lies nur relevante Dateien. Respektiere bestehende Tests und
 Konventionen; ändere Tests nur im zugewiesenen Umfang. Opfere niemals Sicherheit für
 kürzeren Code. Nur Main Manager erteilt Implementierungsaufträge.
+Prüfe den mitgegebenen aktuellen Issue-Link, bestätigten Assignee/Status und die
+Übernahmefreigabe; bei fehlendem/unklarem Stand Main fragen und nicht beginnen.
+Keine fremd zugewiesene oder laufende Aufgabe ohne dokumentierte Abstimmung übernehmen.
+Main/Git Manager erledigt dazu die Live-GitHub-Prüfung, nicht der Developer.
 Prüfe vor Änderungen echtes cwd, Git-Top-Level, Branch und Head gegen den Auftrag;
 bei Abweichung oder auf main/dev/ops stoppen. Arbeite nur im angegebenen Feature-Worktree.
 Keine GitHub-Verwaltung, Architektur-Großplanung, allgemeine Recherche oder Agentenstarts.
@@ -166,7 +179,7 @@ tatsächliche Laufzeit prüfen. Neue Kindaufgaben erhalten nur ihren expliziten 
 Übergabeschema für alle Rollen:
 
 ```text
-Issue: #N
+Issue: #N + URL; bestätigter Assignee/Status und Übernahmeabstimmung
 Aufgabe: ...
 Worktree: absoluter Feature-Pfad
 Branch: feat/... oder fix/...
