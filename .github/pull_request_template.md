@@ -1,5 +1,7 @@
 ## Issue
-Closes #<issue-number> (nur wenn der Merge das Issue vollständig abschließt; sonst Refs).
+Refs #<issue-number>. Feature-/Fix-PR nach `dev`; PR-Link auch im Issue ergänzen.
+Keinen automatischen Issue-Abschluss durch Closing-Keywords bei Nicht-Default `dev` annehmen.
+Abschluss erst nach bestätigtem Merge und erfüllten Akzeptanzkriterien.
 
 ## Änderung und Akzeptanzkriterien
 

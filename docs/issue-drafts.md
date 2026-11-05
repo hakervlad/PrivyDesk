@@ -6,10 +6,14 @@ und die Kriterien für echte CI sowie Pfad-/Bestätigungsgrenzen konkretisiert.
 Die Nummern 1–3 sind Entwurfsnummern, keine zugewiesenen GitHub-Issue-Nummern.
 Nach Veröffentlichung werden diese Entwürfe durch die echten Issue-Links ersetzt;
 keine parallele Statuspflege in dieser Datei.
-Veröffentlichung und Project-Aufnahme brauchen Nutzerfreigabe. Anfangsstatus Backlog;
+Nutzerfreigabe für Veröffentlichung und Project-Aufnahme liegt vor; die zusätzliche
+Bedingung „vier Automationen im Detail prüfen“ ist noch offen. Bis dahin nicht publizieren.
+Alle drei Feature-Branches starten von dev; PR-Ziel dev. KI-Konfiguration bleibt in Ops.
+Anfangsstatus Backlog;
 Ready erst nach erfüllten Voraussetzungen. Prioritäten sind Vorschläge.
 
 Git-Manager-Lauf: <t3-thread://v2/578517d3-d173-40e9-bab5-17221ad170fd/thread:delegated-task:command%3Amcp%3Ab6a9b051-aec9-4cd4-9556-a1ded6efc470%3Adelegate-task%3Afb063d2c-11fc-4d43-822f-c1d237cf2548>
+Historischer Vorbereitungsnachweis vor Branch-Trennung, kein aktueller Ziel-Checkout:
 Beobachteter gemeinsamer Checkout: Projektroot; Branch chore/multi-agent-workflow;
 Head während der Prüfung 37c8885ed0aa945b79d94ab147670007fe3298e8. Keine Schreibaktionen.
 
@@ -19,7 +23,7 @@ Head während der Prüfung 37c8885ed0aa945b79d94ab147670007fe3298e8. Keine Schre
 
 **Beschreibung**
 
-Die technische Projektgrundlage soll nach ausdrücklicher Stackentscheidung eingerichtet werden. Zur Auswahl stehen Tauri mit React/TypeScript/Rust oder Electron mit React/TypeScript. Der Main Manager vergleicht die Optionen; dieser Entwurf legt keine Architektur fest. Die Stackzustimmung ist Voraussetzung für den Start.
+Die technische Projektgrundlage soll nach ausdrücklicher Stackentscheidung eingerichtet werden. Empfohlen ist Tauri 2 mit React/TypeScript und kleinem Rust-Kern; der Vergleich mit Electron steht in docs/start-readiness.md im Ops-Checkout. Die Stackentscheidung bleibt offen; dieser Entwurf legt keine Architektur fest. Die Stackzustimmung ist Voraussetzung für den Start.
 
 **Priorität:** P1
 
@@ -28,10 +32,11 @@ Die technische Projektgrundlage soll nach ausdrücklicher Stackentscheidung eing
 **Akzeptanzkriterien**
 
 - [ ] Der bestätigte Stack und die zugehörigen Laufzeit- und Buildvoraussetzungen sind dokumentiert.
+- [ ] Der vollständige getrackte App-Baum enthält keine KI-Agenten-Konfiguration oder reine Orchestrierungsdokumentation.
 - [ ] Das Projekt lässt sich mit den im Repository dokumentierten Befehlen lokal starten und bauen.
 - [ ] Die minimale Anwendungsoberfläche startet ohne Laufzeitfehler.
 - [ ] Reale Test-, Lint-, Typecheck- und Build-Einstiege sind vorhanden und dokumentiert; jeder Befehl wurde lokal ausgeführt.
-- [ ] Die vorhandene CI-Vorlage wird erst mit diesen realen Befehlen aktiviert; ein Pull-Request-Lauf führt sie aus und schlägt bei einem fehlschlagenden Check fehl.
+- [ ] Die vorhandene CI-Vorlage wird erst mit diesen realen Befehlen aktiviert; ein Pull-Request-Lauf nach dev führt sie aus und schlägt bei einem fehlschlagenden Check fehl.
 
 **Tests:** Nur synthetische oder temporäre Testdaten. Nach Stackfreigabe eine minimale echte Testinfrastruktur mit einem sinnvollen Start-/Grenzverhaltenstest einrichten; keine leere Suite als Erfolg werten. Der Main Manager schreibt passende fehlschlagende Tests vor Implementierung und verifiziert die finalen Befehle.
 

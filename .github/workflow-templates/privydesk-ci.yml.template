@@ -1,11 +1,12 @@
 # INACTIVE TEMPLATE: not under .github/workflows and not a .yml workflow file.
 # Choose the actual technology stack, lockfile and test/lint/typecheck commands.
 # Replace the failing prerequisite job with those real checks, then review and
-# install as .github/workflows/ci.yml. Never treat this template as passing CI.
+# add individually in an app feature branch as .github/workflows/ci.yml, targeting dev.
+# Do not merge Ops history into dev. Never treat this template as passing CI.
 name: PrivyDesk CI
 on:
   pull_request:
-    branches: [main]
+    branches: [dev]
 permissions:
   contents: read
 jobs:

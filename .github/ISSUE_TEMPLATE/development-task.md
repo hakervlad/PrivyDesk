@@ -17,6 +17,7 @@ Bekannte Issue-Links oder ausdrücklich „keine bekannt“.
 
 ## Branch und Worktree
 Nach Erstellung ergänzen: feat/<issue-number>-<slug> oder fix/<issue-number>-<slug>.
+Basis: geprüfter dev-Stand. PR-Ziel: dev. Keine KI-Konfiguration in App-Branches.
 Worktree-Pfad nur ohne private Daten veröffentlichen.
 
 ## Pull Request

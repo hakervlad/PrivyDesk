@@ -10,6 +10,12 @@ Use github-project-management and git-worktree-pr only when assigned.
 Only Main Manager can approve implementation, certify QA, authorize push or merge.
 Never start agents, delegate to DeepSeek, change application code or make architecture decisions.
 Check issue duplicates and existing branches/worktrees before preparing changes.
+Main Manager stays in ops/agent-workflow. Feature/fix branches start from reviewed
+dev and PRs target dev; main is only for separately authorized stable releases.
+Never merge/cherry-pick Ops or chore configuration into dev/main. Verify the full
+tracked app tree excludes .agents/, .dsh/, .codex/, AGENTS.md and AI-only docs.
+Prepare explicit worktree paths; never assume a shared child from Ops runs in a feature.
+Link issue and PR explicitly; non-default dev does not get automatic keyword closure.
 Ask the user before the first GitHub write unless already explicitly authorized.
 Keep outputs short: result, changed files/resources, errors, remaining tasks.
 Default to read-only planning. Verify actual host permissions; do not treat this

@@ -1,0 +1,59 @@
+{
+  "status": "historical-applied-do-not-replay",
+  "date": "2026-11-05",
+  "note": "Approved Project status update already applied and read back. This archived request is not a current mutation plan; its original new options had no IDs. Always read live fields before future changes.",
+  "result_option_ids": {
+    "Ready to Merge": "3070bfa5",
+    "Blocked": "44c304bc"
+  },
+  "historical_request": {
+    "query": "mutation($input: UpdateProjectV2FieldInput!) { updateProjectV2Field(input: $input) { projectV2Field { ... on ProjectV2SingleSelectField { id name options { id name } } } } }",
+    "variables": {
+      "input": {
+        "fieldId": "PVTSSF_lAHOBPiNWs4AotimzggPN_g",
+        "singleSelectOptions": [
+          {
+            "id": "f75ad846",
+            "name": "Backlog",
+            "color": "GREEN",
+            "description": "This item hasn't been started"
+          },
+          {
+            "id": "08afe404",
+            "name": "Ready",
+            "color": "BLUE",
+            "description": "This is ready to be picked up"
+          },
+          {
+            "id": "47fc9ee4",
+            "name": "In progress",
+            "color": "YELLOW",
+            "description": "This is actively being worked on"
+          },
+          {
+            "id": "4cc61d42",
+            "name": "In review",
+            "color": "PURPLE",
+            "description": "This item is in review"
+          },
+          {
+            "id": "98236657",
+            "name": "Done",
+            "color": "ORANGE",
+            "description": "This has been completed"
+          },
+          {
+            "name": "Ready to Merge",
+            "color": "BLUE",
+            "description": "Main Manager review and required checks passed for the approved commit; user merge confirmation still required."
+          },
+          {
+            "name": "Blocked",
+            "color": "RED",
+            "description": "Work stopped due to a documented dependency or failed prerequisite; not complete."
+          }
+        ]
+      }
+    }
+  }
+}

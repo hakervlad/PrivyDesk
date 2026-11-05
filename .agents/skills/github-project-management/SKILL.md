@@ -17,16 +17,16 @@ Before the first GitHub write action, obtain the user's confirmation. Use a conc
 Inspect available labels, Project fields, and automations first. Prefer existing automation for simple status movement; otherwise use `gh` and change only the relevant field. Mark blocked work with the repository's existing blocked label/status and record the concrete dependency. Never invent labels or fields when an existing convention can be reused.
 
 ## Pull requests and closure
-Link the relevant PR to its issue using GitHub's closing keywords in the PR body when appropriate, or the repository's established linkage method. Do not close an issue until the user-confirmed acceptance criteria are verified as complete. Keep completion notes factual, including verification evidence and remaining limitations. Push and merge require the separate git-worktree-pr skill, explicit Main Manager authorization, verified technical permissions, and user confirmation for the final merge. Do not close before the merge is confirmed.
+Feature/fix PRs target dev, while main remains the default release branch. Include Refs #N in the PR and its URL in the issue; verify both links. Closing keywords do not automatically link/close issues for non-default dev. Inspect Project automation separately. Do not close an issue until the user-confirmed acceptance criteria are verified and the approved dev merge is confirmed. Keep completion notes factual, including verification evidence and remaining limitations. Push and merge require the separate git-worktree-pr skill, explicit Main Manager authorization, verified technical permissions, and user confirmation for the final merge.
 
 Invoke this skill only for new development tasks, important status changes, blockers, or completed tasks—not after every code edit.
 
 ## PrivyDesk lifecycle
-Use the existing Project Status field: Backlog, Ready, In progress, In review, Done.
-Ready to Merge and Blocked are desired additions, pending user authorization;
-do not create a second Status field. Until then retain In review for merge-ready
-work and record the exact approval/head SHA in the PR. For blockers retain the
-current state and document the dependency in the issue; do not use Done or close it.
+Project 1 is linked. Use its existing Status field: Backlog, Ready, In progress,
+In review, Ready to Merge, Done, Blocked. No additional fields/options are needed.
+Record exact approval/head SHA in the PR; document blocker dependencies in the issue.
+Do not use Done or close issues before confirmed merge and completion.
 Prefer existing Project automations after their behavior has been inspected.
-Project selection and automation settings remain unconfirmed; see docs/development-workflow-v2.md.
+Four automations are enabled, but trigger/action details remain unverified. Do not
+publish the prepared issues until these details are checked; see docs/development-workflow-v2.md.
 Only Main Manager may mark implementation reviewed or authorize the next development step.

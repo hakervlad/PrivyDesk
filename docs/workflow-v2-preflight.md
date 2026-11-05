@@ -1,5 +1,9 @@
 # Technische Vorprüfung und Simulation – Workflow V2
 
+> HISTORISCH: Aufnahme vor Konfigurationscommit, Project-Anpassung und Branch-Trennung.
+> Kein aktueller Ausführungsplan. Insbesondere Bootstrap nach main und shared-Developer
+> sind überholt. Aktuell gelten AGENTS.md, development-workflow-v2.md und start-readiness.md.
+
 Prüfdatum: 2026-11-05. Dies ist eine einmalige Einrichtungsaufnahme, kein zweites
 Aufgaben-/Statussystem. Laufende Aufgaben werden ausschließlich in Issues/PRs gepflegt.
 

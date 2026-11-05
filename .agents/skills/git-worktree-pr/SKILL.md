@@ -13,10 +13,16 @@ This skill grants no OS, sandbox, network, or GitHub permissions.
 Check issue existence, linked branches, `git status --short`, `git branch -avv`,
 `git worktree list --porcelain`, and the remote/base before changes.
 One issue, one branch, one worktree: feat/<number>-<slug> or fix/<number>-<slug>.
-Reuse existing work; never duplicate it or develop on main. Never discard uncommitted
+Base every feature/fix on reviewed dev; PRs target dev. main is reserved for separately
+approved releases. Keep ops/agent-workflow as Main Manager's permanent checkout.
+Never merge/cherry-pick Ops or historical chore configuration into app branches.
+Check the complete tracked app tree excludes .agents/, .dsh/, .codex/, AGENTS.md
+and AI-only orchestration docs; app tests/build/docs may be added individually.
+Reuse existing work; never duplicate it or develop directly on main/dev. Never discard uncommitted
 work. gh issue develop here creates remote linked branches but not worktrees;
 prefer local creation/T3 to preserve the review-before-first-push gate.
-A T3 child in the issue checkout uses shared isolation. Do not create a worktree
+Never use shared isolation from Ops for a feature Developer: that runs in Ops.
+delegate_task has no existing-worktree path parameter. Do not create a worktree
 in a delegate prompt/shell for a child using isolation=worktree: T3 owns that setup.
 For a user-requested new top-level thread bound to an existing worktree use
 workspaceStrategy={type:"existing_worktree",worktreePath:<absolute path>}.
@@ -34,10 +40,12 @@ For a created or pushed PR call T3 link_pull_request as the next tool call.
 Use exact body text via --body-file for gh; do not interpolate shell syntax.
 
 ## Pull request
-Inspect existing PRs for the branch before creating one. Base main, head the issue
+Inspect existing PRs for the branch before creating one. Base dev, head the issue
 branch; include acceptance criteria, local test evidence, review SHA, dependencies,
-privacy findings and issue link. Use Closes #N only for work that will complete that
-issue when merged; otherwise Refs #N. GitHub owns the durable progress record.
+privacy findings and issue link. Use Refs #N plus an explicit PR URL in the issue;
+closing keywords do not establish automatic closure for non-default dev. Inspect
+Project automation and close explicitly only after confirmed dev merge and QA.
+GitHub owns the durable progress record.
 
 ## Merge gate
 Require issue link, Main Manager code review, relevant local tests passing,
